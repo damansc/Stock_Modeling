@@ -18,6 +18,7 @@ df divergence(ticker='ticker', start=oneyr, plot=False, reg=False):
 		scaler = StandardScaler().fit(div)
 		global div_std
 		div_std = scaler.transform(div)
+		div_std_diff = div_std-div_std[ticker]
 		
 		if plot == True:
 			div_std.plot.scatter()
@@ -34,6 +35,8 @@ df divergence(ticker='ticker', start=oneyr, plot=False, reg=False):
 			mse = mean_squared_error(y_test, y_pred)
 			r_sqrd = r2_score(y_true, y_pred)
 			return mape, mse, r_sqrd
-		
-		
-			
+
+    sorted_df = div_std_diff.sort_values(by='date', ascending=True)
+    condition = sorted_df > 0
+    sorted_df['days-in-a-row'] = condition.cumsum() - condition.cumsum().where(~condition).ffill().astype(int)
+    return sorted_df
