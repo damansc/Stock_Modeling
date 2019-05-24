@@ -13,7 +13,7 @@ from sklearn.metrics import r2_score
 
 oneyr = dt.datetime.now()-dt.tiimedelta(365), end=dt.datetime.now(
 
-df divergence(ticker='ticker', start=oneyr), plot=False, reg=False):
+df divergence(ticker='ticker', start=oneyr, plot=False, reg=False):
 		div = df[high_pos_dict[ticker]]['Adj Close']
 		scaler = StandardScaler().fit(div)
 		global div_std
