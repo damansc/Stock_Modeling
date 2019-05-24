@@ -39,7 +39,8 @@ df divergence(ticker='ticker', start=oneyr, plot=False, reg=False):
     sorted_df = div_std_diff.sort_values(by='date', ascending=True)
     condition = sorted_df > 0
     sorted_df['days-in-a-row'] = condition.cumsum() - condition.cumsum().where(~condition).ffill().astype(int)
-    return sorted_df
+    desc = sorted_df.describe()
+    return sorted_df, desc
     
     
  ## make method that will be useful for analyze the current days
@@ -51,12 +52,15 @@ df divergence(ticker='ticker', start=oneyr, plot=False, reg=False):
  	if ticker==None:
  		ticker_list = []
  		for x in df.columns.values:
- 			if df[x][df.datetime.now().date():].pct_change() >= 0.05:
- 				 ticker_list.append(x)
- 				 print('Stocks with {} percent change: {}'.format(pctdelta, ticker_list))
+ 			if pctdelta > 0:
+ 				if df[x][df.datetime.now().date():].pct_change() >= pctdelta):
+ 				 	print('Stocks with {} percent change: {}'.format(pctdelta, ticker_list))
+ 			if pctdelta < 0:
+ 				if df[x][df.datetime.now().date():].pct_change() <= pctdelta):
+ 				 	print('Stocks with {} percent change: {}'.format(pctdelta, ticker_list))
  		if ticker != None:
  			df = sp500_meta[ticker]['Adj Close'].pct_change()
- 			condition_dates = df[(df >= 0.05)].index.values
+ 			condition_dates = df[(df >= pctdelta)].index.values
  			condition_post = condition_dates+dt.timedelta(days)
  			df_post = df[df.index == condition_post]
  			avg_post = df_post.describe()
